@@ -10,19 +10,10 @@ const userStrategy = require('../strategies/user.strategy');
 const { badSecret } = require('../constants/warnings');
 
 router.get('/', rejectUnauthenticated, (req, res) => {
-  // protected route (must be authenticated)
-  //athourization 
-  // if( user.clearance_level >= secret.secrecy_level )//not quite right may be in the query and have to execute
-  // console.log('req.user:', req.user);
-  // if( user.username === 'Captain Borodin' )
-
-  //WHERE "user".username = req.user.username
-
-  //Something not quite right with syntax here need to figure it out.
+  
   pool
     .query(`SELECT * FROM "secret"
-    JOIN "user" ON "user".clearance_level > secret.secrecy_level
-    WHERE "user".username = {req.user.username}
+    JOIN "user" ON "user".clearance_level >= secret.secrecy_level
     ORDER BY "user".username ASC;`)
     .then((results) => res.send(results.rows))
     .catch((error) => {
